@@ -35,10 +35,11 @@ public class EventSubscriber {
     public static void attachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (event.getObject() instanceof ManaPoolBlockEntity) {
             ResourceLocation id = new ResourceLocation(ModMain.MODID, "mana_fluid");
-            event.addCapability(id, new ICapabilitySerializable<net.minecraft.nbt.CompoundTag>() {
 
-                private final LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(() ->
-                        new ManaPoolFluidHandler((ManaPoolBlockEntity) event.getObject()));
+            LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(() ->
+                    new ManaPoolFluidHandler((ManaPoolBlockEntity) event.getObject()));
+
+            ICapabilitySerializable<net.minecraft.nbt.CompoundTag> provider = new ICapabilitySerializable<net.minecraft.nbt.CompoundTag>() {
 
                 @Override
                 public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, net.minecraft.core.Direction side) {
@@ -56,9 +57,13 @@ public class EventSubscriber {
                 @Override
                 public void deserializeNBT(net.minecraft.nbt.CompoundTag nbt) {
                 }
-            });
+            };
+
+            event.addCapability(id, provider);
+            event.addListener(fluidHandler::invalidate);
         }
     }
+
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
