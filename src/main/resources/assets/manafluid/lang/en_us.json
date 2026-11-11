@@ -1,5 +1,6 @@
 {
   "fluid_type.manafluid.mana_fluid": "Mana",
   "block.manafluid.mana_block": "Mana",
-  "item.manafluid.mana_bucket": "Bucket of Mana"
+  "item.manafluid.mana_bucket": "Bucket of Mana",
+  "tooltip.manafluid.mana_pool": "Connects to pipes and works with buckets"
 }
